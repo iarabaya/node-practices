@@ -1,22 +1,44 @@
 require('colors');
 
-const { showMenu , pause } = require('./helpers/messages');
+const { inquirerMenu, pause, readInput } = require('./helpers/inquirer');
+const Todos = require('./models/todos');
+// const Todo = require('./models/todo');
+// const { showMenu , pause } = require('./helpers/messages-model');
 
-console.clear();
 const main = async() => {
-  console.log('Hola mundo');
 
   let opt = '';
+  const todos = new Todos();
 
   do {
     
-   opt = await showMenu();
+   opt = await inquirerMenu();
    console.log({opt});
-   if( opt !== '0') await pause();
 
+   switch (opt) {
+     case '1':
+       //create option
+       const description = await readInput('Description:');
+       todos.createTodo(description);
+       break;
+
+     case '2':
+       //list options
+       console.log(todos._list);
+       break;
+   }
+   
+   
+   await pause();
+   
   } while( opt !== '0' );
-
-  // pause();
+  
 }
 
 main();
+
+/*
+const todo = new Todo('ir de compras');
+todos._list[todo.id] = todo;
+console.log (todos);
+*/
