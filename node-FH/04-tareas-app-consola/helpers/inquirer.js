@@ -9,31 +9,31 @@ const questions = [
     choices: [
       {
         value: '1',
-        name: '1. Create to-do'
+        name: `${'1.'.green} Create to-do`
       },
       {
         value: '2',
-        name:'2. List all to-dos'
+        name: `${'2.'.green} List all to-dos`
       },
       {
         value: '3',
-        name:'3. List completed to-dos'
+        name:`${'3.'.green} List completed to-dos`
       },
       {
         value: '4',
-        name:'4. List unfinished to-dos'
+        name:`${'4.'.green} List unfinished to-dos`
       },
       {
         value: '5',
-        name:'5. Complete to-do(s)'
+        name:`${'5.'.green} Complete to-do(s)`
       },
       {
         value: '6',
-        name:'6. Delete to-dos'
+        name:`${'5.'.green} Delete to-dos`
       },
       {
         value: '0',
-        name:'0. Exit'
+        name:`${'0.'.green} Exit`
       },
     ]
   }
