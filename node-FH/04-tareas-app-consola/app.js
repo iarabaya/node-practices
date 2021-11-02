@@ -1,6 +1,7 @@
 require('colors');
 
 const { inquirerMenu, pause, readInput } = require('./helpers/inquirer');
+const { saveDB, readDB } = require('./helpers/saveFile');
 const Todos = require('./models/todos');
 // const Todo = require('./models/todo');
 // const { showMenu , pause } = require('./helpers/messages-model');
@@ -9,6 +10,11 @@ const main = async() => {
 
   let opt = '';
   const todos = new Todos();
+  const todosDB = readDB();
+
+  if( todosDB ){ // load todos
+    todos.loadTodosFromArray( todosDB );
+  }
 
   do {
     // prints menu and options
@@ -23,11 +29,11 @@ const main = async() => {
 
      case '2':
        //list options
-       console.log(todos.arrList);
+       todos.completeList()
        break;
    }
    
-   
+   saveDB( todos.arrList );
    await pause();
    
   } while( opt !== '0' );

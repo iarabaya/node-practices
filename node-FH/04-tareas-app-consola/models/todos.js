@@ -1,4 +1,5 @@
 const Todo = require('./todo');
+require('colors');
 
 /* model example todo list
 _listado: {
@@ -10,6 +11,7 @@ _listado: {
 }*/
 
 class Todos {
+
   _list = {};
 
 
@@ -27,9 +29,24 @@ class Todos {
     this._list = {};
   }
 
+  loadTodosFromArray( todos = [] ){
+    todos.forEach( todo => { 
+      this._list[todo.id] = todo;
+    });
+  }
+
   createTodo( desc = ''){
     const todo = new Todo( desc );
     this._list[todo.id] = todo;
+  }
+
+
+  completeList(){
+    this.arrList.forEach( (todo, i) =>{
+      const index = i + 1;
+      todo.completed ?
+      console.log(`${index} ${todo.description} :: Completed`.green) : console.log(`${index} ${todo.description} :: Unfinished`.red);
+    })
   }
 }
 
