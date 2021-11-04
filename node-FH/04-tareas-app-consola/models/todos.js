@@ -29,6 +29,12 @@ class Todos {
     this._list = {};
   }
 
+  deleteTodo( id = '' ){
+    if( this._list[id] ){
+      delete this._list[id]
+    }
+  }
+
   loadTodosFromArray( todos = [] ){
     todos.forEach( todo => { 
       this._list[todo.id] = todo;
@@ -41,11 +47,25 @@ class Todos {
   }
 
 
-  completeList(){
+  showCompleteTodoList(){
     this.arrList.forEach( (todo, i) =>{
-      const index = i + 1;
-      todo.completed ?
-      console.log(`${index} ${todo.description} :: Completed`.green) : console.log(`${index} ${todo.description} :: Unfinished`.red);
+      const index = `${i + 1}`.green;
+      const { description, completed } = todo;
+      const state = (completed) ? 'Completed'.green : 'Pending'.red;
+
+      console.log(`${index} ${description} :: ${ state }`)
+    })
+  }
+
+  showTodoListByState( completed = true ){
+    const todosList = completed ? this.arrList.filter(todo => todo.completed ) : this.arrList.filter(todo => todo.completed === null);
+
+    todosList.forEach( (todo, i) =>{
+      const index = `${i + 1}.`.green;
+      const { description, completed } = todo;
+      const state = (completed) ? `${'Completed'.green} in ${todo.completed}` : 'Pending'.red;
+
+      console.log(`${index} ${description} :: ${ state }`);
     })
   }
 }

@@ -29,7 +29,7 @@ const questions = [
       },
       {
         value: '6',
-        name:`${'5.'.green} Delete to-dos`
+        name:`${'6.'.green} Delete to-do(s)`
       },
       {
         value: '0',
@@ -63,6 +63,18 @@ const pause = async () =>{
   await inquirer.prompt(question);
 }
 
+const confirm = async ( message ) =>{
+  const question = [
+    {
+      type: 'confirm',
+      name: 'ok',
+      message
+    }
+  ]
+  const {ok} = await inquirer.prompt(question);
+  return ok;
+}
+
 const readInput = async ( message ) =>{
   const question = [
     {
@@ -82,8 +94,42 @@ const readInput = async ( message ) =>{
   return desc;
 }
 
+
+const listTodosDelete = async ( todos = [] ) => {
+
+  const choices = todos.map( (todo, i) => {
+    const idx = `${i + 1}.`;
+    return {
+      value: todo.id,
+      name: `${idx.green} ${todo.description}`
+    }
+  });
+
+  choices.unshift({
+    value: '0',
+    name: `${'0.'.green} Cancel`
+  })
+
+  const questions = [
+    {
+      type: 'list',
+      name: 'id',
+      message: 'Delete',
+      choices //: choices
+    }
+  ]
+
+  const { id } = await inquirer.prompt(questions);
+
+  return id;
+}
+
+
+
 module.exports = {
   inquirerMenu,
   pause,
-  readInput
+  confirm,
+  readInput,
+  listTodosDelete
 }
