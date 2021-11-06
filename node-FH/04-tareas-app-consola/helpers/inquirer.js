@@ -124,12 +124,36 @@ const listTodosDelete = async ( todos = [] ) => {
   return id;
 }
 
+const showChecklist = async ( todos = [] ) => {
 
+  const choices = todos.map( (todo, i) => {
+    const idx = `${i + 1}.`;
+    return {
+      value: todo.id,
+      name: `${idx.green} ${todo.description}`,
+      checked: (todo.completed) ? true : false
+    }
+  });
+
+  const question = [
+    {
+      type: 'checkbox',
+      name: 'ids',
+      message: 'Selections',
+      choices //: choices
+    }
+  ]
+
+  const { ids } = await inquirer.prompt(question);
+
+  return ids;
+}
 
 module.exports = {
   inquirerMenu,
   pause,
   confirm,
   readInput,
-  listTodosDelete
+  listTodosDelete,
+  showChecklist
 }

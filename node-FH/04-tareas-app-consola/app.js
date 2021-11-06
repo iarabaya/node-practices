@@ -1,6 +1,6 @@
 require('colors');
 
-const { inquirerMenu, pause, confirm, readInput, listTodosDelete } = require('./helpers/inquirer');
+const { inquirerMenu, pause, confirm, readInput, listTodosDelete, showChecklist } = require('./helpers/inquirer');
 const { saveDB, readDB } = require('./helpers/saveFile');
 const Todos = require('./models/todos');
 // const Todo = require('./models/todo');
@@ -40,6 +40,11 @@ const main = async() => {
       case '4':
         //list pending todos
         todos.showTodoListByState( false );
+        break;
+      
+      case '5':
+        const ids = await showChecklist( todos.arrList );
+        todos.toggleCompleted( ids );
         break;
 
       case '6':

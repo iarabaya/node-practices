@@ -63,11 +63,29 @@ class Todos {
     todosList.forEach( (todo, i) =>{
       const index = `${i + 1}.`.green;
       const { description, completed } = todo;
-      const state = (completed) ? `${'Completed'.green} in ${todo.completed}` : 'Pending'.red;
+      const state = (completed) ? `${'Completed'.green} in ${todo.completed.green}` : 'Pending'.red;
 
       console.log(`${index} ${description} :: ${ state }`);
     })
   }
+
+
+  toggleCompleted(ids = []){
+
+    ids.forEach( id => {
+      const todo = this._list[id];
+      if ( !todo.completed ){
+        todo.completed = new Date().toISOString();
+      }
+    })
+
+    this.arrList.forEach( todo => {
+      if( !ids.includes(todo.id) ){
+         this._list[todo.id].completed = null;
+      }
+    })
+
+    }
 }
 
 module.exports = Todos;
