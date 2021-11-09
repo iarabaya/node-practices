@@ -11,8 +11,12 @@ class Search {
   }
 
   get capitalizedHistory(){
-    return this.history.forEach( e => e.toUpperCase() );
-  }
+    return this.history.map( e => {
+      let words = e.split(' ');
+      words = words.map( p => p[0].toUpperCase() + p.substring(1) )
+      return words.join(' ');
+      });
+    }
 
   get paramsMapbox(){
     return {
@@ -80,7 +84,9 @@ class Search {
 
   addSearchHistory( place = '' ){
     //TODO avoid duplicates
-    if ( this.history.includes( place.toLocaleLowerCase() ))
+    if ( this.history.includes( place.toLocaleLowerCase() )){
+      return;
+    }
 
     this.history.unshift( place.toLocaleLowerCase() );
 
@@ -97,12 +103,12 @@ class Search {
   }
 
   readDB(){
-    //must exist
+    if( !fs.existsSync( this.dbPath )) return;
 
-    //const info .... readfilesync...path ...{encoding:utf-8}
-    const data = JSON.stringify( info );
+    const info = fs.readFileSync(this.dbPath, {encoding:'utf-8'});
+    const data = JSON.parse( info );
 
-    this.history = history
+    this.history = data.history;
 
   }
 }

@@ -41,8 +41,8 @@ const main = async () =>{
         console.log('The weather is', weather.description);
         break;
       case 2:
-        // search.capitalizedHistory.forEach()
-        search.history.forEach( (place, i) =>{
+        
+        search.capitalizedHistory.forEach( (place, i) =>{
           const idx = `${ i+1 }.`.green;
           console.log(`${ idx } ${ place }`);
         })
