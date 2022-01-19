@@ -1,4 +1,9 @@
-const { response, request } = require('express')
+const { response, request } = require('express');
+const bcryptjs = require('bcryptjs'); //hash one-way passwords
+
+const User = require('../models/user');
+
+/* PATH: /api/users */
 
 const usersGet = (req = request ,res = response ) => {
 
@@ -15,14 +20,29 @@ const usersGet = (req = request ,res = response ) => {
   })
 };
 
-const usersPost = (req,res = response )=>{
-  // const body = req.body;
-  const { nombre, edad } = req.body;
+const usersPost = async (req,res = response )=>{
 
-  res.status(201).json({
+  const { name, email, password, role }= req.body;
+  const user = new User({name, email, password, role});
+
+  //Verify email
+  const emailExists = await User.findOne({email});
+  if( emailExists ){
+    return res.status(400).json({
+      msg: 'The email is already registered'
+    })
+  }
+
+  //Hash password
+  const salt = bcryptjs.genSaltSync();
+  user.password = bcryptjs.hashSync( password, salt );
+
+  //Save in db
+  await user.save();
+
+  res.json({
     msg: 'post API - Controller',
-    nombre, 
-    edad
+    user
   })
 };
 
