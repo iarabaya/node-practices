@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validateInput } = require('../middlewares/validate-input');
-const { isValidRole } = require('../helpers/db-validators');
+const { isValidRole, emailExists, existsUserById } = require('../helpers/db-validators');
 
 const { usersGet, 
         usersPost, 
@@ -20,13 +20,19 @@ router.post('/',[
         check('name', 'You must provide a name').not().isEmpty(),
         check('password', 'Password must be 6 characters or longer').isLength({ min: 6 }),
         check('email', 'Invalid email').isEmail(),
+        check('email').custom( emailExists ),
         // check('role', 'Invalid role').isIn(['ADMIN_ROLE', 'USER_ROLE']),
         check('role').custom( isValidRole ),
         validateInput
 ], usersPost);
 
 //con parametro id
-router.put('/:id', usersPut);
+router.put('/:id',[
+        check('id', 'Invalid Id').isMongoId(),
+        check('id').custom( existsUserById ),
+        check('role').custom( isValidRole ),
+        validateInput
+], usersPut);
 
 router.patch('/', usersPatch);
 
