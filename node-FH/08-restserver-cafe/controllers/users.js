@@ -73,11 +73,12 @@ const usersDelete = async (req,res = response )=>{
   const { id } = req.params;
 
   //delete form database
-  const user = await User.findByIdAndDelete( id );
+  // const user = await User.findByIdAndDelete( id );
 
-  //change user's state
-  // const user = await User.findByIdAndUpdate(id, {state: false});
-  
+  //change user's state in inactive ones
+  const user = await User.findByIdAndUpdate(id, {state: false});
+  // const userAuthenticated = req.authUser;
+
   res.json({
     msg: 'delete API - Controller',
     user
