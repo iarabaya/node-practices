@@ -5,20 +5,31 @@ const User = require('../models/user');
 
 /* PATH: /api/users */
 
-const usersGet = (req = request ,res = response ) => {
+const usersGet = async (req = request ,res = response ) => {
 
-  // const queryParams = req.query;
-  const { q, nombre = "No name", apiKey, page = 1, limit } = req.query;
+  const { limit = 5, offset = 0 } = req.query;
 
+  //returns only active users (not removed ones)
+  // const users = await User.find({state: true})
+  //                         .skip(Number(offset))
+  //                         .limit(Number(limit));
+
+  //returns the total number of active users
+  // const total = await User.countDocuments({state: true});
+
+  const [ total, users ] = await Promise.all([
+    User.countDocuments({state: true}),
+    User.find({state: true})
+        .skip(Number(offset))
+        .limit(Number(limit))
+  ])
   res.json({
     msg: 'get API - Controller',
-    q,
-    nombre,
-    apiKey,
-    page,
-    limit
+    total,
+    users
   })
 };
+
 
 const usersPost = async (req,res = response )=>{
 
@@ -38,9 +49,10 @@ const usersPost = async (req,res = response )=>{
   })
 };
 
+
 const usersPut = async (req,res = response )=>{
 
-  const id = req.params.id;
+  const { id } = req.params;
   const { _id, password, google, email, ...rest } = req.body;
 
   if(password){
@@ -49,23 +61,33 @@ const usersPut = async (req,res = response )=>{
     rest.password = bcryptjs.hashSync( password, salt );
   }
 
-  const user = await User.findByIdAndUpdate( id, rest );
+  //Model.findByIdAndUpdate(id, update, options)
+  const user = await User.findByIdAndUpdate( id, rest, {returnDocument: 'after'} );
 
-  res.status(400).json({
-    msg: 'put API - Controller',
+  res.status(400).json( user );
+};
+
+
+const usersDelete = async (req,res = response )=>{
+
+  const { id } = req.params;
+
+  //delete form database
+  const user = await User.findByIdAndDelete( id );
+
+  //change user's state
+  // const user = await User.findByIdAndUpdate(id, {state: false});
+  
+  res.json({
+    msg: 'delete API - Controller',
     user
   })
 };
 
+
 const usersPatch = (req,res = response )=>{
   res.status(200).json({
     msg: 'patch API - Controller'
-  })
-};
-
-const usersDelete = (req,res = response )=>{
-  res.json({
-    msg: 'delete API - Controller'
   })
 };
 
