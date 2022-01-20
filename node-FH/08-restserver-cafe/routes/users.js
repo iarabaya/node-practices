@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validateInput } = require('../middlewares/validate-input');
-const { validateJWT } = require('../middlewares/validate-jwt');
-const { isAdminRole, hasRole } = require('../middlewares/validate-roles');
+// const { validateInput } = require('../middlewares/validate-input');
+// const { validateJWT } = require('../middlewares/validate-jwt');
+// const { isAdminRole, hasRole } = require('../middlewares/validate-roles');
+const { validateInput, validateJWT ,isAdminRole, hasRole } = require('../middlewares');
 
 const { isValidRole, emailExists, existsUserById } = require('../helpers/db-validators');
 
