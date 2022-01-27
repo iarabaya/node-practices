@@ -16,7 +16,7 @@ const { usersGet,
 
 const router = Router();
 
-/* PATH: /api/users */
+/* PATH: {{url}}/api/users */
 
 router.get('/', usersGet);
 
