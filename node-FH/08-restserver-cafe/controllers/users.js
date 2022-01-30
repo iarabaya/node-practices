@@ -64,7 +64,7 @@ const usersPut = async (req,res = response )=>{
   //Model.findByIdAndUpdate(id, update, options)
   const user = await User.findByIdAndUpdate( id, rest, {returnDocument: 'after'} );
 
-  res.status(400).json( user );
+  res.status(200).json( user );
 };
 
 
