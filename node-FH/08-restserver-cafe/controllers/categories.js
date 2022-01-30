@@ -77,7 +77,6 @@ const updateCategory = async (req= request, res = response) =>{
 
 //delete category - change state:true to false
 const deleteCategory = async(req= request, res= response) =>{
-
   const { id } = req.params;
 
   const categoryDeleted = await Category.findByIdAndUpdate(id, {state: false}, {new:true});
@@ -86,7 +85,6 @@ const deleteCategory = async(req= request, res= response) =>{
     msg:'DELETE category - Controller',
     categoryDeleted
   })
-
 }
 
 
