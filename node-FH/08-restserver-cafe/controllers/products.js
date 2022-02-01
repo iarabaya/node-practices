@@ -10,6 +10,7 @@ const getProducts = async(req= request, res= response) => {
     Product.find({state: true})
             .skip(Number(offset))
             .limit(Number(limit))
+            .populate('user', 'name')
             .populate('category', 'name')
   ])
 
@@ -23,7 +24,9 @@ const getProducts = async(req= request, res= response) => {
 //Get one product by id
 const getProductById = async(req= request, res= response) => {
   const { id } = req.params;
-  const product = await Product.findById(id).populate('category', 'name');
+  const product = await Product.findById(id)
+                              .populate('user', 'name')
+                              .populate('category', 'name');
 
   res.status(200).json({
     msg: 'GET product by id - Controller',
@@ -33,9 +36,10 @@ const getProductById = async(req= request, res= response) => {
 
 //Create product - checks database
 const createProduct = async(req= request, res= response) => {
-  const name = req.body.name.toUpperCase();
   
-  const productDB = await Product.findOne({ name });
+  const { state, user, name, ...body } = req.body
+  
+  const productDB = await Product.findOne({ name: name.toUpperCase() });
 
   if( productDB ){
     return res.status(400).json({
@@ -43,28 +47,33 @@ const createProduct = async(req= request, res= response) => {
     });
   }
 
+  // const category  = await Category.findOne({name: req.body.category.toUpperCase()})
   //Generate data to save
   const data = {
-    name,
-    user: req.authUser._id
+    ...body,
+    name: name.toUpperCase(), 
+    user: req.authUser._id,
   }
 
-  // console.log(data);
   const product = new Product( data );
   //Save in DB
   await product.save();
 
   res.status(201).json(product);
-
 }
 
 //UPDATE by id
 const updateProduct = async(req= request, res= response) => {
   const { id } = req.params;
-  const{ state, ...data } = req.body;
-  data.name = data.name.toUpperCase();
+  const{ state, user , ...data } = req.body;
 
-  const product = await Product.findByIdAndUpdate(id,{ data }, {returnDocument: 'after'}).populate('category','name');
+  if( data.name ){
+    data.name = data.name.toUpperCase();
+  }
+  //the last user that made the change
+  data.user = req.authUser._id;
+
+  const product = await Product.findByIdAndUpdate(id,{ ...data }, {returnDocument: 'after'}).populate('category','name');
 
   res.status(200).json({
     msg:'UPDATE product - Controller',
@@ -79,7 +88,7 @@ const deleteProduct = async(req= request, res= response) => {
   const productDeleted = await Product.findByIdAndUpdate(id, {state: false}, {new:true});
 
   res.json({
-    msg:'DELETE category - Controller',
+    msg:'DELETE product - Controller',
     productDeleted
   })
 }

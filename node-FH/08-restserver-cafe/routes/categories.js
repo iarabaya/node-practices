@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateJWT, validateInput, isAdminRole } = require('../middlewares');
 
-const { existsCategory } = require('../helpers/db-validators');
+const { existsCategoryById } = require('../helpers/db-validators');
 
 const { getCategories,
         getCategoryById, 
@@ -21,7 +21,7 @@ router.get('/', getCategories);
 //Get category by id - public
 router.get('/:id', [
   check('id', 'Invalid Id').isMongoId(),
-  check('id').custom( existsCategory ),
+  check('id').custom( existsCategoryById ),
   validateInput
 ], getCategoryById );
 
@@ -36,7 +36,7 @@ router.post('/', [
 router.put('/:id', [
   validateJWT,
   check('id', 'Invalid Id').isMongoId(),
-  check('id').custom( existsCategory ),
+  check('id').custom( existsCategoryById ),
   check('name', 'The name is required').notEmpty(),
   validateInput
 ], updateCategory);
@@ -46,7 +46,7 @@ router.delete('/:id', [
   validateJWT,
   isAdminRole,
   check('id', 'Invalid Id').isMongoId(),
-  check('id').custom( existsCategory ),
+  check('id').custom( existsCategoryById ),
   validateInput
 ], deleteCategory);
 
