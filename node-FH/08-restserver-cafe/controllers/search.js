@@ -82,7 +82,7 @@ const search = (req, res = response) => {
   }
 
   switch (collection) {
-    case 'category': searchCategories(term, res)
+    case 'categories': searchCategories(term, res)
       break;
     case 'products': searchProducts(term, res)
       break;
