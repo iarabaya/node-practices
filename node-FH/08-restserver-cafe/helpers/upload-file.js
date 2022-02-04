@@ -23,7 +23,7 @@ const uploadFile = ( files, extensions = ['png', 'jpg', 'jpeg', 'gif'], folder =
         return reject(err);
       }
   
-      resolve(uploadPath);
+      resolve(tempName);
     });
   })
 
