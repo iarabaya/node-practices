@@ -1,6 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 
+const cloudinary =  require('cloudinary').v2
+cloudinary.config( process.env.CLOUDINARY_URL)
+
 const { response } = require("express");
 const { uploadFile } = require('../helpers');
 
@@ -57,6 +60,41 @@ const updateImage = async (req, res= response) => {
   res.json({ model })
 }
 
+const updateImageCloudinary = async (req, res= response) => {
+  const { id, collection } = req.params;
+  let model;
+
+  switch (collection) {
+    case 'users':
+      model = await User.findById(id);
+      if(!model) { return res.status(400).json({ msg: `The user with id ${id} doesn't exist.`})}
+      
+      break;
+
+    case 'products':
+      model = await Product.findById(id);
+      if(!model) { return res.status(400).json({ msg: `The product with id ${id} doesn't exist.`})}
+   
+      break;
+  
+    default:
+      return res.status(500).json({ msg: 'Forgot to validate this'})
+  }
+  
+  //clean previous images
+  if( model.img ){
+    //TODO
+  }
+  
+  const { tempFilePath } = req.files.file;
+  const resp =  await cloudinary.uploader.upload( tempFilePath );
+
+  // model.img = name;
+  // await model.save();
+
+  res.json(resp)
+}
+
 const showImage = async(req, res= response) => {
   const { id, collection } = req.params;
   let model;
@@ -90,5 +128,6 @@ const showImage = async(req, res= response) => {
 module.exports = {
   uploadFiles,
   updateImage,
+  updateImageCloudinary,
   showImage
 }
