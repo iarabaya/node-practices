@@ -83,16 +83,19 @@ const updateImageCloudinary = async (req, res= response) => {
   
   //clean previous images
   if( model.img ){
-    //TODO
+    const nameArr = model.img.split('/');
+    const name = nameArr[ nameArr.length - 1];
+    const [ public_id ] = name.split('.');
+    await cloudinary.uploader.destroy( public_id );
   }
   
   const { tempFilePath } = req.files.file;
-  const resp =  await cloudinary.uploader.upload( tempFilePath );
+  const { secure_url }=  await cloudinary.uploader.upload( tempFilePath );
 
-  // model.img = name;
-  // await model.save();
+  model.img = secure_url;
+  await model.save();
 
-  res.json(resp)
+  res.json(model);
 }
 
 const showImage = async(req, res= response) => {

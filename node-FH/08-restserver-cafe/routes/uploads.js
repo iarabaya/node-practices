@@ -17,7 +17,7 @@ router.put('/:collection/:id', [
   check('collection').custom(c => availableCollections(c, ['users', 'products'])),
   validateInput
 ], updateImageCloudinary );
-// ], updateImage )
+// ], updateImage ) //with local memory save
 
 router.get('/:collection/:id', [
   check('id', 'Invalid mongo id').isMongoId(),
