@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.putUser = exports.postUser = exports.getUser = exports.getUsers = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_1.default.findAll();
+    const users = yield user_1.default.findAll({ where: { state: true } });
     res.json({
         msg: 'getUsers',
         users
@@ -46,7 +46,7 @@ const postUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         if (emailExists) {
             return res.status(400).json({
-                msg: 'An user with that email already exist' + body.email
+                msg: 'An user with that email already exist ' + body.email
             });
         }
         const user = yield user_1.default.create(body);
@@ -81,12 +81,22 @@ const putUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.putUser = putUser;
-const deleteUser = (req, res) => {
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    const user = yield user_1.default.findByPk(id);
+    if (!user) {
+        return res.status(404).json({
+            msg: `An user with id ${id} doesn't exist.`
+        });
+    }
+    //physical removal from database
+    // await user.destroy();
+    //logical removal from database
+    yield user.update({ state: false });
     res.json({
         msg: 'deleteUser',
-        id
+        user
     });
-};
+});
 exports.deleteUser = deleteUser;
 //# sourceMappingURL=user.js.map

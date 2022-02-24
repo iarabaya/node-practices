@@ -3,7 +3,7 @@ import User from '../models/user';
 
 export const getUsers = async (req: Request, res: Response) =>{
   
-  const users = await User.findAll();
+  const users = await User.findAll({ where: { state: true }});
   
   res.json({
     msg: 'getUsers',
@@ -38,7 +38,7 @@ export const postUser = async (req: Request, res: Response) =>{
 
     if (emailExists){
       return res.status(400).json({
-        msg: 'An user with that email already exist' + body.email
+        msg: 'An user with that email already exist ' + body.email
       })
     }
     const user = await User.create(body);
@@ -79,11 +79,24 @@ export const putUser = async (req: Request, res: Response) =>{
   
 }
 
-export const deleteUser = (req: Request, res: Response) =>{
+export const deleteUser = async (req: Request, res: Response) =>{
   const { id } = req.params;
-  
+
+  const user =  await User.findByPk(id);
+  if(!user){
+    return res.status(404).json({
+      msg: `An user with id ${id} doesn't exist.`
+    })
+  }
+
+  //physical removal from database
+  // await user.destroy();
+
+  //logical removal from database
+  await user.update({ state: false });
+
   res.json({
     msg: 'deleteUser',
-    id
+    user
   })
 }
