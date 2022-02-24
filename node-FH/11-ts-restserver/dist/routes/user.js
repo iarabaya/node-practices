@@ -5,8 +5,8 @@ const user_1 = require("../controllers/user");
 const router = (0, express_1.Router)();
 router.get('/', user_1.getUsers);
 router.get('/:id', user_1.getUser);
-router.get('/', user_1.postUser);
-router.get('/:id', user_1.putUser);
-router.get('/:id', user_1.deleteUser);
+router.post('/', user_1.postUser);
+router.put('/:id', user_1.putUser);
+router.delete('/:id', user_1.deleteUser);
 exports.default = router;
 //# sourceMappingURL=user.js.map

@@ -8,11 +8,11 @@ router.get('/', getUsers);
 
 router.get('/:id', getUser);
 
-router.get('/', postUser);
+router.post('/', postUser);
 
-router.get('/:id', putUser);
+router.put('/:id', putUser);
 
-router.get('/:id', deleteUser);
+router.delete('/:id', deleteUser);
 
 
 export default router;
