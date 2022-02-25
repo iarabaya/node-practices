@@ -19,6 +19,10 @@ socket.on('disconnect', () => {
   lblOnline.style.display = 'none';
 })
 
+socket.on('send-msg', (payload) => {
+  console.log('msg received from client', payload)
+})
+
 btnSend.addEventListener( 'click', () => {
   const msg = txtMsg.value;
   const payload = {
@@ -27,5 +31,8 @@ btnSend.addEventListener( 'click', () => {
     date: new Date().getTime()
   }
 
-  socket.emit('send-msg', payload );
+  socket.emit('send-msg', payload, ( id ) => {
+    console.log('desde el server', id );
+  });
 })
+
