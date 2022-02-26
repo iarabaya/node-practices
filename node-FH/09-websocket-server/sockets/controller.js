@@ -10,7 +10,7 @@ const socketController = (socket) =>{
       const id = 123456;
       callback( {id, date: new Date().getDate() });
       
-      socket.broadcast.emit('send-message', payload);
+      socket.broadcast.emit('send-msg', payload);
   })
 }
 
