@@ -30,11 +30,11 @@ class TicketControl {
 
   init(){
     const { last, date, tickets, last4} = require('../database/data.json');
-    if( date === this.hoy ){
+    if( date === this.date ){
       this.tickets  = tickets;
       this.last = last;
       this.last4 = last4;
-
+      console.log('iniciando');
     }else{
       //its another day
       this.saveDB();
@@ -43,7 +43,7 @@ class TicketControl {
 
   saveDB(){
 
-    const dbPath = path.join( __dirname,'../db/data.json' );
+    const dbPath = path.join( __dirname,'../database/data.json' );
     fs.writeFileSync( dbPath, JSON.stringify( this.toJson ) );
 
   }

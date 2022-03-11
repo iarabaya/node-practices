@@ -1,10 +1,6 @@
-const TicketControl = require("../../models/ticket-control");
-
 const lblNuevoTicket = document.querySelector('#lblNuevoTicket');
 const createBtn = document.querySelector('button');
 const socket = io();
-
-
 
 socket.on('connect', () => {
 
@@ -18,13 +14,8 @@ socket.on('disconnect', () => {
 
 });
 
-
-socket.on('enviar-mensaje', (payload) => {
-    console.log( payload )
-})
-
 socket.on('last-ticket', (last) =>{
-  lblNuevoTicket.innerText = 'Ticket ' + last
+  lblNuevoTicket.innerText = 'Ticket ' + last;
 });
 
 

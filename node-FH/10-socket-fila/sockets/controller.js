@@ -4,16 +4,15 @@ const ticketControl = new TicketControl();
 
 const socketController = (socket) =>{
 
-  socket.emit('last-ticket', TicketControl.last);
+  socket.emit('last-ticket', ticketControl.last);
 
   socket.on('next-ticket', ( payload, callback ) => {
-
 
     const next = ticketControl.nextTicket();
     callback( next );
     //TODO Notify that there is a new ticket to assign
       
-      socket.broadcast.emit('send-message', payload);
+    // socket.broadcast.emit('send-message', payload);
   })
 }
 
