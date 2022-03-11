@@ -3,15 +3,15 @@ const TicketControl = require("../models/ticket-control");
 const ticketControl = new TicketControl();
 
 const socketController = (socket) =>{
- 
-  socket.on('disconnect', () => {
-      console.log('disconected client', socket.id);
-  })
 
-  socket.on('send-msg', ( payload, callback ) => {
-      // console.log('message from client received ', payload);
-      const id = 123456;
-      callback( {id, date: new Date().getDate() });
+  socket.emit('last-ticket', TicketControl.last);
+
+  socket.on('next-ticket', ( payload, callback ) => {
+
+
+    const next = ticketControl.nextTicket();
+    callback( next );
+    //TODO Notify that there is a new ticket to assign
       
       socket.broadcast.emit('send-message', payload);
   })
