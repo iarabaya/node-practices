@@ -29,7 +29,7 @@ class TicketControl {
   }
 
   init(){
-    const { last, date, tickets, last4} = require('../database/data.json');
+    const { last, date, tickets, last4 } = require('../database/data.json');
     if( date === this.date ){
       this.tickets  = tickets;
       this.last = last;
@@ -57,14 +57,14 @@ class TicketControl {
     return 'Ticket ' + ticket.number;
   }
 
-  attendTicket( desktop ){
+  attendTicket( desk ){
     //without tickets
     if( this.tickets.length === 0){
       return null;
     }
 
     const ticket = this.tickets.shift(); //this.tickets[0];
-    ticket.desktop = desktop;
+    ticket.desk = desk;
 
     this.last4.unshift( ticket );
 
