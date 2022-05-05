@@ -35,34 +35,47 @@ miFormulario.addEventListener('submit', e => {
   })
 })
 
-function onSignIn(googleUser) {
+// function handleCredentialResponse(response) {
+function onSignIn(googleUser){
+  //Google token :ID_TOKEN
+  //console.log('id_token',response.credential)
 
-    // let profile = googleUser.getBasicProfile();
-    // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    // console.log('Name: ' + profile.getName());
-    // console.log('Image URL: ' + profile.getImageUrl());
-    // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  // let profile = googleUser.getBasicProfile();
+  // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  // console.log('Name: ' + profile.getName());
+  // console.log('Image URL: ' + profile.getImageUrl());
+  // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
-    let { id_token } = googleUser.getAuthResponse();
-    const data = { id_token };
-    
-    fetch( url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( data )
-    })
-    .then( resp => resp.json() )
-    .then( ({ token }) => {
-      console.log( 'Nuestro server', token );
-      localStorage.setItem('token', token);
-    })
-    .catch( console.log );
-    
+  let { id_token } = googleUser.getAuthResponse();
+  const body = { id_token };
+
+  fetch('http://localhost:8080/api/auth/google', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
+  .then(res => res.json())
+  .then(({ user, token }) => {
+    localStorage.setItem('email', user.email)
+    localStorage.setItem('token', token)
+    console.log('our server response: ', token)
+  })
+  .catch(console.warn)
 }
 
-function signOut() {
+  function signOut() {
     let auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
     console.log('User signed out.');
     });
-}
+  }
+
+// const button = document.getElementById('#google_signout');
+// button.onclick = () => {
+//   google.accounts.id.disableAutoSelect()
+
+//   google.accounts.id.revoke(localStorage.getItem('email'), done => {
+//     localStorage.clear();
+//     location.reload();
+//   })
+// }

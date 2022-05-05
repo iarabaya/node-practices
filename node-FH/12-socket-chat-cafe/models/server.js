@@ -1,20 +1,28 @@
 const express = require('express');
 const cors = require('cors');
-const { dbConnection } = require('../database/config');
 const fileUpload =  require('express-fileupload');
+
+const { dbConnection } = require('../database/config');
+
+const { createServer } = require('http');
+const { socketController } = require('../sockets/socketController');
+
+
 class Server {
 
   constructor(){
     this.app = express();
     this.port = process.env.PORT;
+    this.server = createServer(this.app);
+    this.io = require('socket.io')(this.server);
 
     this.paths = {
-      auth: '/api/auth',
+      auth:       '/api/auth',
       categories: '/api/categories',
-      products: '/api/products',
-      search: '/api/search',
-      users: '/api/users',
-      uploads: '/api/uploads',
+      products:   '/api/products',
+      search:     '/api/search',
+      users:      '/api/users',
+      uploads:    '/api/uploads',
     }
 
     //Database Connection
@@ -23,8 +31,11 @@ class Server {
     //Middlewares
     this.middlewares();
     
-    //Rutas de la app
+    //App routes
     this.routes();
+
+    //Sockets
+    this.sockets();
   }
 
   async connectDB(){
@@ -58,8 +69,12 @@ class Server {
     this.app.use(this.paths.uploads, require('../routes/uploads'));
   };
 
+  sockets(){
+    this.io.on('connection', socketController);
+  }
+
   listen(){
-    this.app.listen(this.port, ()=>{
+    this.server.listen(this.port, ()=>{
       console.log('Servidor escuchando el puerto', this.port );
     });
   }
