@@ -10,7 +10,7 @@ const { googleVerify } = require('../helpers/google-verify');
 const login = async(req, res = response) => {
 
     const { correo, password } = req.body;
-
+    console.log(correo, password)
     try {
       
         // Verificar si el email existe
@@ -57,10 +57,10 @@ const login = async(req, res = response) => {
 const googleSignin = async(req, res = response) => {
 
     const { id_token } = req.body;
-    
+
     try {
         const { correo, nombre, img } = await googleVerify( id_token );
-
+        console.log(correo)
         let usuario = await Usuario.findOne({ correo });
 
         if ( !usuario ) {
