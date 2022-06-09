@@ -23,13 +23,15 @@ miFormulario.addEventListener('submit', e => {
   })
   .then( res => res.json() )
   .then( data => {
-    console.log(data)
-    let { msg, token } = data;
-    if( msg ){
-      return console.error(msg);
+    // console.log(data)
+    let { msg, token, errors } = data;
+    if( msg || errors ){
+      console.log(msg || errors);
+    }else {
+      localStorage.setItem('token', token);
+      window.location = 'chat.html';
     }
 
-    localStorage.setItem('token', token);
   }).catch( err => {
     console.log(err)
   })
@@ -58,6 +60,7 @@ function onSignIn(googleUser){
   .then(({ user, token }) => {
     localStorage.setItem('email', user.email)
     localStorage.setItem('token', token)
+    window.location = 'chat.html';
     console.log('our server response: ', token)
   })
   .catch(console.warn)
