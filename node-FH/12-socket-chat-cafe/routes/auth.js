@@ -20,7 +20,7 @@ router.post('/google',[
   validateInput
 ], googleSignIn);
 
-router.get( '' , validateJWT, renovateToken )
+router.get( '/' , validateJWT, renovateToken )
 
 module.exports = router;
 
